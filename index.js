@@ -48,10 +48,23 @@ async function run() {
             })
 
             // get single user by id 
-            app.get('/users/:id',async(req,res)=>{
+            // app.get('/users/:id',async(req,res)=>{
+            //       const {id}= req.params;
+            //       const query = {_id:new ObjectId(id)};
+            //       const result = await usersCollection.findOne(query);
+            //       res.send(result)
+            // })
+
+            app.post('/users',async(req,res)=>{
+                  const user= req.body;
+                  const result = await usersCollection.insertOne(user);
+                  res.send(result)
+            })
+
+            app.delete('/users/:id',async(req,res)=>{
                   const {id}= req.params;
                   const query = {_id:new ObjectId(id)};
-                  const result = await usersCollection.findOne(query);
+                  const result = await usersCollection.deleteOne(query);
                   res.send(result)
             })
 
