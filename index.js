@@ -55,12 +55,14 @@ async function run() {
                   res.send(result)
             })
 
+            //user post api
             app.post('/users', async (req, res) => {
                   const user = req.body;
                   const result = await usersCollection.insertOne(user);
                   res.send(result)
             })
 
+            // user delete api 
             app.delete('/users/:id', async (req, res) => {
                   const { id } = req.params;
                   const query = { _id: new ObjectId(id) };
@@ -68,6 +70,7 @@ async function run() {
                   res.send(result)
             })
 
+            // user update api 
             app.patch('/users/:id', async (req, res) => {
                   const { id } = req.params;
                   const data = req.body;
