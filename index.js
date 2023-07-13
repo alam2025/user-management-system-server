@@ -35,38 +35,61 @@ const client = new MongoClient(uri, {
 async function run() {
       try {
             // Connect the client to the server	(optional starting in v4.7)
-            await client.connect();
+            //await client.connect();
 
             const usersCollection = client.db("UserManagementSystem").collection("users");
 
 
             // users api 
             app.get('/users', async (req, res) => {
-                  const result= await usersCollection.find().toArray();
-                  console.log(result);
+                  const result = await usersCollection.find().toArray();
+
                   res.send(result)
             })
 
             // get single user by id 
-            // app.get('/users/:id',async(req,res)=>{
-            //       const {id}= req.params;
-            //       const query = {_id:new ObjectId(id)};
-            //       const result = await usersCollection.findOne(query);
-            //       res.send(result)
-            // })
+            app.get('/users/:id', async (req, res) => {
+                  const { id } = req.params;
+                  const query = { _id: new ObjectId(id) };
+                  const result = await usersCollection.findOne(query);
+                  res.send(result)
+            })
 
-            app.post('/users',async(req,res)=>{
-                  const user= req.body;
+            app.post('/users', async (req, res) => {
+                  const user = req.body;
                   const result = await usersCollection.insertOne(user);
                   res.send(result)
             })
 
-            app.delete('/users/:id',async(req,res)=>{
-                  const {id}= req.params;
-                  const query = {_id:new ObjectId(id)};
+            app.delete('/users/:id', async (req, res) => {
+                  const { id } = req.params;
+                  const query = { _id: new ObjectId(id) };
                   const result = await usersCollection.deleteOne(query);
                   res.send(result)
             })
+
+            app.patch('/users/:id', async (req, res) => {
+                  const { id } = req.params;
+                  const data = req.body;
+                
+
+                  const filter = { _id: new ObjectId(id) };
+                  const updateDoc = {
+                        $set: {
+                              name:data.name,
+                              email:data.email,
+                              phoneNumber: data.phoneNumber
+                        }
+                  };
+                  console.log(updateDoc);
+
+                 const result= await usersCollection.updateOne(filter, updateDoc);
+                 console.log(result);
+                 res.send(result)
+            });
+
+
+
 
             // Send a ping to confirm a successful connection
             await client.db("admin").command({ ping: 1 });
